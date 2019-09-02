@@ -4,7 +4,7 @@ public class BlackJackProtocol {
     public int player_moved[];
     public Deck deck;
     public BlackjackHand dealerHand;
-    public BlackjackHand userHand[];     
+    public BlackjackHand userHand[];
 
     public BlackJackProtocol(){
         player_count = 0;
@@ -16,5 +16,12 @@ public class BlackJackProtocol {
         player_moved = new int[2];
         player_moved[0] = 0;
         player_moved[1] = 0;
+    }
+
+    public String processInput(String theInput) {
+        String theOutput = theInput;
+
+
+        return theOutput;
     }
 }

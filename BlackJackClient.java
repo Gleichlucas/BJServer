@@ -27,7 +27,7 @@ public class BlackJackClient {
             while ((fromServer = in.readLine()) != null)
             {
                 System.out.println(fromServer);
-                if (fromServer.equals("How many dollars do you want to bet? (Enter 0 to end.) ? "))
+                if (fromServer.equals("Read user input"))
                 {
                     fromUser = stdIn.readLine();
                     if (fromUser != null)
@@ -40,6 +40,7 @@ public class BlackJackClient {
                         out.println(fromUser);
                 }
             }
+            System.out.println("while is over party");
         } catch (UnknownHostException e) {
             System.err.println("Don't know about host " + hostName);
             System.exit(1);
