@@ -45,21 +45,40 @@ public class TwoPlayerBJ extends Thread {
   }
 
   private void sendToBothPlayers(String msg){
-    if (playerOneThread != null)
+    if (playerOneThread != null && playerTwoThread != null)
     {
       playerOneThread.out.println(msg);
       playerTwoThread.out.println(msg);
+    }
+    else
+    {
+      sendPOne("Game Over");
+      sendPTwo("Game Over");
+      System.out.println("Player Offline! Killing thread.");
+      return ;
     }
   }
 
     private void sendPOne(String msg){
       if (playerOneThread != null)
         playerOneThread.out.println(msg);
+      else
+      {
+        sendPTwo("Game Over");
+        System.out.println("Player Offline! Killing thread.");
+        return ;
+      }
   }
 
   private void sendPTwo(String msg){
     if (playerTwoThread != null)
       playerTwoThread.out.println(msg);
+    else
+    {
+      sendPOne("Game Over");
+      System.out.println("Player Offline! Killing thread.");
+      return ;
+    }
     }
 
 
@@ -82,7 +101,8 @@ public class TwoPlayerBJ extends Thread {
                sendPTwo("You have Blackjack.  You win.");
                if (ret == 1)
                 ret = 3;
-               ret = 2;
+               else
+                ret = 2;
           }
           return ret;
       }

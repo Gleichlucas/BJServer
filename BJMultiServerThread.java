@@ -30,14 +30,11 @@ public void run() {
 
         while ((inputLine = in.readLine()) != null) {
             userInput = inputLine;
-            //outputLine = bjp.processInput(inputLine);
-            //out.println(outputLine);
-          //  if (outputLine.equals("Bye"))
-          //      break;
         }
         System.out.println("closing socket ...");
         socket.close();
-    } catch (IOException e) {
+    } catch (Exception e) {
+        System.out.println("Thead exception - lost connection 2 client");
         e.printStackTrace();
     }
   }
