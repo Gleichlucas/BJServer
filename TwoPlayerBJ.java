@@ -144,10 +144,17 @@ public class TwoPlayerBJ extends Thread {
             sendPOne("Read user input");
             while (playerOneThread.userInput == null)
             {
+              sendPOne("Hey man, u stil there?");
               try { Thread.sleep(500);
               } catch(Exception e) {
                 System.out.println("Thread cant sleep");
               }
+              if (playerOneThread.alive.equals("Yaas man, relax") == false)
+              {
+                sendPTwo("Player 1 died.. RIP");
+                return ;
+              }
+               playerOneThread.alive = "idk...";
             }
             if (playerOneThread.userInput.equals("Hit"))
             {

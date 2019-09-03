@@ -7,12 +7,14 @@ public class BJMultiServerThread extends Thread {
   public PrintWriter out;
   public BufferedReader in;
   public String userInput;
+  public String alive;
 
 public BJMultiServerThread(Socket socket) {
     super("BJMultiServerThread");
     this.socket = socket;
     out = null;
     in = null;
+    alive = ("Yaas man, relax");
 }
 
 public void run() {
@@ -29,12 +31,15 @@ public void run() {
         out.println("Looking for a Game ...");
 
         while ((inputLine = in.readLine()) != null) {
-            userInput = inputLine;
+            if (inputLine.equals("Hey man, u stil there?"))
+              alive = ("Yaas man, relax");
+            else
+              userInput = inputLine;
         }
         System.out.println("closing socket ...");
         socket.close();
     } catch (Exception e) {
-        System.out.println("Thead exception - lost connection 2 client");
+        System.out.println("Thead exception");
         e.printStackTrace();
     }
   }
