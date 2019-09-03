@@ -26,18 +26,16 @@ public class BlackJackClient {
 
             while ((fromServer = in.readLine()) != null)
             {
-                System.out.println(fromServer);
+
                 if (fromServer.equals("Read user input"))
                 {
                     fromUser = stdIn.readLine();
                     if (fromUser != null)
                         out.println(fromUser);
                 }
-                else if (fromServer.equals("Hit (0) or Stand (1)? "))
+                else
                 {
-                    fromUser = stdIn.readLine();
-                    if (fromUser != null)
-                        out.println(fromUser);
+                    System.out.println(fromServer);
                 }
             }
             System.out.println("while is over party");

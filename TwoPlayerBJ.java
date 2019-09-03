@@ -121,6 +121,7 @@ public class TwoPlayerBJ extends Thread {
           for (int i = 0; i < userHand[0].getCardCount(); i++)
             sendPOne("\t" + userHand[0].getCard(i));
             sendPOne("\nWanna \"Hit\" dat?");
+            sendPOne("Read user input");
             while (playerOneThread.userInput == null)
             {
               try { Thread.sleep(500);
@@ -128,7 +129,7 @@ public class TwoPlayerBJ extends Thread {
                 System.out.println("Thread cant sleep");
               }
             }
-            if (playerOneThread.userInput == "Hit")
+            if (playerOneThread.userInput.equals("Hit"))
             {
               Card newCard = deck.dealCard();
               userHand[0].addCard(newCard);
@@ -164,7 +165,7 @@ public class TwoPlayerBJ extends Thread {
                 System.out.println("Thread cant sleep");
               }
             }
-            if (playerOneThread.userInput == "Hit")
+            if (playerOneThread.userInput.equals("Hit"))
             {
               Card newCard = deck.dealCard();
               userHand[1].addCard(newCard);
@@ -305,6 +306,8 @@ public class TwoPlayerBJ extends Thread {
     userAction == 2 <=> Player busted
     userAction == 1 <=> Player won
     */
+
+    // this should be in playRound
     if (userAction[0] == 0){
       sendToBothPlayers("Player one lost " + bet[0]+ " $$$");
       money[0] -= bet[0];
