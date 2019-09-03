@@ -7,7 +7,7 @@ public class BlackJackClient {
 
         if (args.length != 2)
         {
-            System.err.println("Usage: java EchoClient <host name> <port number>");
+            System.err.println("Usage: java BlackJackClient <host name> <port number>");
             System.exit(1);
         }
 
@@ -32,6 +32,10 @@ public class BlackJackClient {
                     fromUser = stdIn.readLine();
                     if (fromUser != null)
                         out.println(fromUser);
+                }
+                else if (fromServer.equals("Game Over"))
+                {
+                  return ;
                 }
                 else
                 {

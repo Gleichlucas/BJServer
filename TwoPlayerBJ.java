@@ -136,6 +136,7 @@ public class TwoPlayerBJ extends Thread {
               sendPOne("\nUser hits.");
               sendPOne("Your card is the " + newCard);
               sendPOne("Your total is now " + userHand[0].getBlackjackValue());
+              playerOneThread.userInput = null;
             }
             else
             {
@@ -158,20 +159,21 @@ public class TwoPlayerBJ extends Thread {
             sendPTwo("\t" + userHand[1].getCard(i));
             sendPTwo("\nWanna \"Hit\" dat?");
             sendPTwo("Read user input");
-            while (playerOneThread.userInput == null)
+            while (playerTwoThread.userInput == null)
             {
               try { Thread.sleep(500);
               } catch(Exception e) {
                 System.out.println("Thread cant sleep");
               }
             }
-            if (playerOneThread.userInput.equals("Hit"))
+            if (playerTwoThread.userInput.equals("Hit"))
             {
               Card newCard = deck.dealCard();
               userHand[1].addCard(newCard);
               sendPTwo("\nUser hits.");
               sendPTwo("Your card is the " + newCard);
               sendPTwo("Your total is now " + userHand[1].getBlackjackValue());
+              playerTwoThread.userInput = null;
             }
             else
             {
@@ -203,6 +205,24 @@ public class TwoPlayerBJ extends Thread {
             userAction[0] = 0;
           if (userHand[1].getBlackjackValue() >= 22 || userHand[1].getBlackjackValue() <= dealerHand.getBlackjackValue())
             userAction[1] = 0;
+        }
+        if (userAction[0] == 0){
+          sendToBothPlayers("Player one lost " + bet[0]+ " $$$");
+          money[0] -= bet[0];
+        }
+        else
+        {
+          sendToBothPlayers("Player one won " + bet[0]+ " $$$");
+          money[0] += bet[0];
+        }
+        if (userAction[1] == 0){
+          sendToBothPlayers("Player two lost " + bet[1] +" $$$");
+          money[1] -= bet[1];
+        }
+        else
+        {
+          sendToBothPlayers("Player two won " + bet[1]+ " $$$");
+          money[1] += bet[1];
         }
       }
     }
@@ -308,29 +328,13 @@ public class TwoPlayerBJ extends Thread {
     */
 
     // this should be in playRound
-    if (userAction[0] == 0){
-      sendToBothPlayers("Player one lost " + bet[0]+ " $$$");
-      money[0] -= bet[0];
-    }
-    else
-    {
-      sendToBothPlayers("Player one won " + bet[0]+ " $$$");
-      money[0] += bet[0];
-    }
-    if (userAction[1] == 0){
-      sendToBothPlayers("Player two lost " + bet[1] +" $$$");
-      money[1] -= bet[1];
-    }
-    else
-    {
-      sendToBothPlayers("Player two won " + bet[1]+ " $$$");
-      money[1] += bet[1];
-    }
+
 
   }
   if (money[0] == 0)
     sendToBothPlayers("Player One ran out of money...\n\n\nwhat a loser...\nPlayer two walks away with " + money[1] +" GAME OVER");
   else
     sendToBothPlayers("Player Two ran out of money...\n\n\nwhat a loser...\nPlayer one walks away with " + money[0]+ " GAME OVER");
+  sendToBothPlayers("Game Over");
 }
 }
