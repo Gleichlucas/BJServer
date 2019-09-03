@@ -147,7 +147,7 @@ public class TwoPlayerBJ extends Thread {
         if (userHand[0].getBlackjackValue() > 21)
         {
           sendPOne("You busted by going over 21.  You lose.");
-          userAction[0] = 2;
+          userAction[0] = 0;
         }
       }
       else if (j == 1)
@@ -184,7 +184,7 @@ public class TwoPlayerBJ extends Thread {
         if (userHand[1].getBlackjackValue() > 21)
         {
           sendPTwo("You busted by going over 21.  You lose.");
-          userAction[0] = 2;
+          userAction[0] = 0;
         }
 
       }
@@ -322,12 +322,19 @@ public class TwoPlayerBJ extends Thread {
 
 
     playRound();
+    // reseting shit
+    playerOneThread.userInput = null;
+    playerTwoThread.userInput = null;
+    dealerHand.clear();
+    userHand[0].clear();
+    userHand[1].clear();
+
     /*
     userAction == 2 <=> Player busted
     userAction == 1 <=> Player won
     */
 
-    // this should be in playRound
+
 
 
   }

@@ -4,7 +4,7 @@ import java.util.*;
 
 
 public class BJMultiServer {
-    public static BlackJackProtocol bjp;
+
     public static void main(String[] args) throws IOException {
 
     int portNumber;
@@ -12,7 +12,6 @@ public class BJMultiServer {
     List<BJMultiServerThread> clients = new ArrayList<BJMultiServerThread>();
     BJMultiServerThread tmp;
 
-    bjp = new BlackJackProtocol();
 
     if (args.length != 1)
     {
