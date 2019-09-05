@@ -44,7 +44,7 @@ public class TwoPlayerBJ extends Thread {
     bet[1] = 0;
   }
 
-  private void sendToBothPlayers(String msg){
+  private void sendToBothClients(String msg){
     if (playerOneThread != null && playerTwoThread != null)
     {
       playerOneThread.out.println(msg);
@@ -52,53 +52,97 @@ public class TwoPlayerBJ extends Thread {
     }
     else
     {
-      sendPOne("Game Over");
-      sendPTwo("Game Over");
+      sendClientOne("Game Over");
+      sendClientTwo("Game Over");
       System.out.println("Player Offline! Killing thread.");
       return ;
     }
   }
 
-    private void sendPOne(String msg){
+    private void sendClientOne(String msg){
       if (playerOneThread != null)
         playerOneThread.out.println(msg);
       else
       {
-        sendPTwo("Game Over");
+        sendClientTwo("Game Over");
         System.out.println("Player Offline! Killing thread.");
         return ;
       }
   }
 
-  private void sendPTwo(String msg){
+  private void sendClientTwo(String msg){
     if (playerTwoThread != null)
       playerTwoThread.out.println(msg);
     else
     {
-      sendPOne("Game Over");
+      sendClientOne("Game Over");
       System.out.println("Player Offline! Killing thread.");
       return ;
     }
     }
+    private void askPlayer(String name, String action)
+    {
+      if (name.equals("One"))
+      {
+        if (action.equals("nbr"))
+          sendClientOne("Read nbr");
+        else
+          sendClientOne("Read user input");
+        while (playerOneThread.userInput == null)
+        {
+          //sendClientOne("Hey man, u stil there?");
+          try { Thread.sleep(500);
+          } catch(Exception e) {
+            System.out.println("Thread cant sleep");
+          }
+        //  if (playerOneThread.alive.equals("Yaas man, relax") == false)
+        //  {
+      //      sendClientTwo("Player 1 died.. RIP");
+      //      return ;
+      //    }
+    //       playerOneThread.alive = "idk...";
+        }
+      }
 
+      if (name.equals("Two"))
+      {
+        if (action.equals("nbr"))
+          sendClientTwo("Read nbr");
+        else
+          sendClientTwo("Read user input");
+        while (playerTwoThread.userInput == null)
+        {
+        //  sendClientTwo("ping");
+          try { Thread.sleep(500);
+          } catch(Exception e) {
+            System.out.println("Thread cant sleep");
+          }
+      //    if (playerTwoThread.alive.equals("Yaas man, relax") == false)
+      //    {
+      //      sendClientOne("Player 2 died.. RIP");
+      //      return ;
+        //    }
+          }
+      }
+    }
 
     private int checkForBlackjack(){
           int ret = 42;
           if (dealerHand.getBlackjackValue() == 21)
           {
-               sendToBothPlayers("Dealer has Blackjack.  Dealer wins.");
+               sendToBothClients("Dealer has Blackjack.  Dealer wins.");
                return 0;
           }
 
           if (userHand[0].getBlackjackValue() == 21)
           {
-               sendPOne("You have Blackjack.  You win.");
-               sendPTwo("Player 2 has Blackjack.");
+               sendClientOne("You have Blackjack.  You win.");
+               sendClientTwo("Player 2 has Blackjack.");
                ret = 1;
           }
           if (userHand[1].getBlackjackValue() == 21)
           {
-               sendPTwo("You have Blackjack.  You win.");
+               sendClientTwo("You have Blackjack.  You win.");
                if (ret == 1)
                 ret = 3;
                else
@@ -110,25 +154,25 @@ public class TwoPlayerBJ extends Thread {
     private void printHands(){
 
       int size = dealerHand.getCardCount();
-      sendToBothPlayers("Dealer has the Cards:");
+      sendToBothClients("Dealer has the Cards:");
       for(int i = 0; i < size; i++){
-        sendToBothPlayers("\t" + dealerHand.getCard(i));
+        sendToBothClients("\t" + dealerHand.getCard(i));
       }
-      sendToBothPlayers("\n");
+      sendToBothClients("\n");
 
       size = userHand[0].getCardCount();
-      sendToBothPlayers("Player 1 has the Cards:");
+      sendToBothClients("Player 1 has the Cards:");
       for(int i = 0; i < size; i++){
-        sendToBothPlayers("\t" + userHand[0].getCard(i));
+        sendToBothClients("\t" + userHand[0].getCard(i));
       }
-      sendToBothPlayers("\n");
+      sendToBothClients("\n");
 
       size = userHand[1].getCardCount();
-      sendToBothPlayers("Player 2 has the Cards:");
+      sendToBothClients("Player 2 has the Cards:");
       for(int i = 0; i < size; i++){
-        sendToBothPlayers("\t" + userHand[1].getCard(i));
+        sendToBothClients("\t" + userHand[1].getCard(i));
       }
-      sendToBothPlayers("\n");
+      sendToBothClients("\n");
     }
 
 
@@ -137,43 +181,29 @@ public class TwoPlayerBJ extends Thread {
       {
         while (userHand[0].getBlackjackValue() < 21 && userAction[0] != 1)
         {
-          sendPOne("\nYour cards are:");
+          sendClientOne("\nYour cards are:");
           for (int i = 0; i < userHand[0].getCardCount(); i++)
-            sendPOne("\t" + userHand[0].getCard(i));
-            sendPOne("\nWanna \"Hit\" dat?");
-            sendPOne("Read user input");
-            while (playerOneThread.userInput == null)
-            {
-              sendPOne("Hey man, u stil there?");
-              try { Thread.sleep(500);
-              } catch(Exception e) {
-                System.out.println("Thread cant sleep");
-              }
-              if (playerOneThread.alive.equals("Yaas man, relax") == false)
-              {
-                sendPTwo("Player 1 died.. RIP");
-                return ;
-              }
-               playerOneThread.alive = "idk...";
-            }
+            sendClientOne("\t" + userHand[0].getCard(i));
+            sendClientOne("\nWanna \"Hit\" dat?");
+            askPlayer("One", "action");
             if (playerOneThread.userInput.equals("Hit"))
             {
               Card newCard = deck.dealCard();
               userHand[0].addCard(newCard);
-              sendPOne("\nUser hits.");
-              sendPOne("Your card is the " + newCard);
-              sendPOne("Your total is now " + userHand[0].getBlackjackValue());
+              sendClientOne("\nUser hits.");
+              sendClientOne("Your card is the " + newCard);
+              sendClientOne("Your total is now " + userHand[0].getBlackjackValue());
               playerOneThread.userInput = null;
             }
             else
             {
-              sendPOne("\nUser stands.");
+              sendClientOne("\nUser stands.");
               userAction[0] = 1;
             }
         }
         if (userHand[0].getBlackjackValue() > 21)
         {
-          sendPOne("You busted by going over 21.  You lose.");
+          sendClientOne("You busted by going over 21.  You lose.");
           userAction[0] = 0;
         }
       }
@@ -181,36 +211,29 @@ public class TwoPlayerBJ extends Thread {
       {
         while (userHand[1].getBlackjackValue() < 21 && userAction[1] != 1)
         {
-          sendPTwo("\nYour cards are:");
+          sendClientTwo("\nYour cards are:");
           for (int i = 0; i < userHand[1].getCardCount(); i++)
-            sendPTwo("\t" + userHand[1].getCard(i));
-            sendPTwo("\nWanna \"Hit\" dat?");
-            sendPTwo("Read user input");
-            while (playerTwoThread.userInput == null)
-            {
-              try { Thread.sleep(500);
-              } catch(Exception e) {
-                System.out.println("Thread cant sleep");
-              }
-            }
+            sendClientTwo("\t" + userHand[1].getCard(i));
+            sendClientTwo("\nWanna \"Hit\" dat?");
+              askPlayer("Two", "action");
             if (playerTwoThread.userInput.equals("Hit"))
             {
               Card newCard = deck.dealCard();
               userHand[1].addCard(newCard);
-              sendPTwo("\nUser hits.");
-              sendPTwo("Your card is the " + newCard);
-              sendPTwo("Your total is now " + userHand[1].getBlackjackValue());
+              sendClientTwo("\nUser hits.");
+              sendClientTwo("Your card is the " + newCard);
+              sendClientTwo("Your total is now " + userHand[1].getBlackjackValue());
               playerTwoThread.userInput = null;
             }
             else
             {
-              sendPTwo("\nUser stands.");
+              sendClientTwo("\nUser stands.");
               userAction[1] = 1;
             }
         }
         if (userHand[1].getBlackjackValue() > 21)
         {
-          sendPTwo("You busted by going over 21.  You lose.");
+          sendClientTwo("You busted by going over 21.  You lose.");
           userAction[0] = 0;
         }
 
@@ -220,10 +243,10 @@ public class TwoPlayerBJ extends Thread {
         while (dealerHand.getBlackjackValue() <= 16)
         {
           Card newCard = deck.dealCard();
-           sendToBothPlayers("Dealer hits and gets the " + newCard);
+           sendToBothClients("Dealer hits and gets the " + newCard);
            dealerHand.addCard(newCard);
            if (dealerHand.getBlackjackValue() > 21)
-              sendToBothPlayers("\nDealer busted by going over 21.");
+              sendToBothClients("\nDealer busted by going over 21.");
 
         }
         if (dealerHand.getBlackjackValue() < 22) //check if players lost
@@ -234,21 +257,21 @@ public class TwoPlayerBJ extends Thread {
             userAction[1] = 0;
         }
         if (userAction[0] == 0){
-          sendToBothPlayers("Player one lost " + bet[0]+ " $$$");
+          sendToBothClients("Player one lost " + bet[0]+ " $$$");
           money[0] -= bet[0];
         }
         else
         {
-          sendToBothPlayers("Player one won " + bet[0]+ " $$$");
+          sendToBothClients("Player one won " + bet[0]+ " $$$");
           money[0] += bet[0];
         }
         if (userAction[1] == 0){
-          sendToBothPlayers("Player two lost " + bet[1] +" $$$");
+          sendToBothClients("Player two lost " + bet[1] +" $$$");
           money[1] -= bet[1];
         }
         else
         {
-          sendToBothPlayers("Player two won " + bet[1]+ " $$$");
+          sendToBothClients("Player two won " + bet[1]+ " $$$");
           money[1] += bet[1];
         }
       }
@@ -276,29 +299,29 @@ public class TwoPlayerBJ extends Thread {
       {
         if (blackjack == 3)
         {
-          sendToBothPlayers("WoW both Players have blackjack!!!!");
+          sendToBothClients("WoW both Players have blackjack!!!!");
         }
         return ;
       }
 
       printHands();
 
-      sendPTwo("Waiting for Player 1");
+      sendClientTwo("Waiting for Player 1");
 
       if (blackjack != 1)
       {
-        sendPOne("It's your turn!");
+        sendClientOne("It's your turn!");
         playHand(0);
       }
 
-      sendPOne("Waiting for Player 2");
+      sendClientOne("Waiting for Player 2");
 
       if (blackjack != 2)
       {
-        sendPTwo("It's your turn!");
+        sendClientTwo("It's your turn!");
         playHand(1);
       }
-      sendToBothPlayers("Dealers turn");
+      sendToBothClients("Dealers turn");
       playHand(2);
 
       }
@@ -306,23 +329,15 @@ public class TwoPlayerBJ extends Thread {
   public void run(){
 
 
-    sendToBothPlayers("starting Game...");
+    sendToBothClients("starting Game...");
     System.out.println("starting Game...");
     // getting bets
     while (money[0] > 0 && money[1] > 0)
     {
-      sendPOne("You have " + money[0] + " dollars.\nYour answer must be between 0 and " + money[0] + '.');
-      sendPTwo("You have " + money[1] + " dollars.\nYour answer must be between 0 and " + money[1] + '.');
-      sendToBothPlayers("Read user input");
-
-    //p1
-      while (playerOneThread.userInput == null)
-      {
-        try { Thread.sleep(1000);
-        } catch(Exception e) {
-          System.out.println("Thread cant sleep");
-        }
-      }
+      sendClientOne("You have " + money[0] + " dollars.\nYour answer must be between 0 and " + money[0] + '.');
+      sendClientTwo("You have " + money[1] + " dollars.\nYour answer must be between 0 and " + money[1] + '.');
+      askPlayer("One", "nbr");
+      askPlayer("Two", "nbr");
 
       try { bet[0] = Integer.parseInt(playerOneThread.userInput);
       } catch(Exception e) {
@@ -330,45 +345,30 @@ public class TwoPlayerBJ extends Thread {
           return ;
         }
         playerOneThread.userInput = null;
-
-    //p2
-      while (playerTwoThread.userInput == null)
-      {
-        try { Thread.sleep(1000);
-        } catch(Exception e) {
-          System.out.println("Thread cant sleep");
-        }
-      }
-
       try { bet[1] = Integer.parseInt(playerTwoThread.userInput);
       } catch(Exception e) {
           System.out.println("Execption prasing int... ending game");
           return ;
         }
-        playerTwoThread.userInput = null;
 
 
+    playerOneThread.userInput = null;
+    playerTwoThread.userInput = null;
     playRound();
-    // reseting shit
     playerOneThread.userInput = null;
     playerTwoThread.userInput = null;
     dealerHand.clear();
     userHand[0].clear();
     userHand[1].clear();
 
-    /*
-    userAction == 2 <=> Player busted
-    userAction == 1 <=> Player won
-    */
-
 
 
 
   }
   if (money[0] == 0)
-    sendToBothPlayers("Player One ran out of money...\n\n\nwhat a loser...\nPlayer two walks away with " + money[1] +" GAME OVER");
+    sendToBothClients("Player One ran out of money...\n\n\nwhat a loser...\nPlayer two walks away with " + money[1] +" GAME OVER");
   else
-    sendToBothPlayers("Player Two ran out of money...\n\n\nwhat a loser...\nPlayer one walks away with " + money[0]+ " GAME OVER");
-  sendToBothPlayers("Game Over");
+    sendToBothClients("Player Two ran out of money...\n\n\nwhat a loser...\nPlayer one walks away with " + money[0]+ " GAME OVER");
+  sendToBothClients("Game Over");
 }
 }

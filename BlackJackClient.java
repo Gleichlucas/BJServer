@@ -33,6 +33,18 @@ public class BlackJackClient {
                     if (fromUser != null)
                         out.println(fromUser);
                 }
+                else if (fromServer.equals("Read nbr"))
+                {
+
+                    fromUser = stdIn.readLine();
+                    try { int tmpNbr = Integer.parseInt(fromUser);
+                    } catch(Exception e) {
+                        System.out.println("Execption prasing int... closing...");
+                        return ;
+                      }
+                    if (fromUser != null)
+                        out.println(fromUser);
+                }
                 else if (fromServer.equals("Game Over"))
                 {
                   return ;
